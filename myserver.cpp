@@ -74,7 +74,7 @@ void MyServer::slotReadClient()
             m_nNextBlockSize = 0;
             qDebug() << clients.size();
             for (size_t i = 0; i < clients.size();++i) {
-                sendToClient(clients[i], "Server Response: Received \"" + str + "\"");
+                sendToClient(clients[i], IpAddress + ": " + str);
 
             }
         }
