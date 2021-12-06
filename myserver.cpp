@@ -1,11 +1,18 @@
 #include "myserver.h"
 #include "ui_myserver.h"
 
+void MyServer::deleteFromList(){
+    for (size_t i = 0; i < clients.size(); ++i) {
+        if(((QTcpSocket*)sender()) == clients[i])
+            clients.erase(clients.begin() + i);
+    }
+}
+
 void MyServer::sendToClient(QTcpSocket *pSocket, const QString &str)
 {
     QByteArray arrBlock;
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_3);
+    out.setVersion(QDataStream::Qt_6_2);
     out << quint16(0) << QTime::currentTime () << str;
     out.device()->seek(0);
     out << quint16(arrBlock.size() - sizeof(quint16));
@@ -20,7 +27,7 @@ MyServer::MyServer(int nPort, QWidget* pwgt) : QWidget (pwgt) , m_nNextBlockSize
         m_ptcpServer->close();
         return;
     }
-    connect(m_ptcpServer,SIGNAL(newConnection),this,SLOT(slotNewConnection()));
+    connect(m_ptcpServer,SIGNAL(newConnection()),this,SLOT(slotNewConnection()));
     m_ptxt = new QTextEdit;
     m_ptxt->setReadOnly(true);
 
@@ -34,14 +41,19 @@ MyServer::MyServer(int nPort, QWidget* pwgt) : QWidget (pwgt) , m_nNextBlockSize
 void MyServer::slotNewConnection()
 {
     QTcpSocket* pClientSocket = m_ptcpServer->nextPendingConnection();
+    clients.push_back(pClientSocket);
+    qDebug() << pClientSocket;
+    connect(pClientSocket, SIGNAL(disconnected()),this ,SLOT(deleteFromList()));
     connect(pClientSocket, SIGNAL(disconnected()), pClientSocket, SLOT(deleteLater()));
     connect(pClientSocket, SIGNAL(readyRead()),this ,SLOT(slotReadClient()));
+
     sendToClient(pClientSocket, "Server Response: Connected!");
 }
 
 void MyServer::slotReadClient()
 {
     QTcpSocket* pClientSocket = (QTcpSocket*)sender();
+
     QDataStream in(pClientSocket);
     in.setVersion(QDataStream::Qt_5_3);
     for (;;) {
@@ -54,13 +66,22 @@ void MyServer::slotReadClient()
                 break;
             QTime time;
             QString str;
-            in >> time >> str;
-            QString strMessage = time.toString() + " " + "Client has sent - " + str;
+            QString IpAddress;
+            in >> IpAddress >> time >> str;
+            qDebug() << IpAddress;
+            QString strMessage = time.toString() + " " + IpAddress + " has sent - " + str;
             m_ptxt->append(strMessage);
             m_nNextBlockSize = 0;
-            sendToClient(pClientSocket, "Server Response: Received \"" + str + "\"");
+            qDebug() << clients.size();
+            for (size_t i = 0; i < clients.size();++i) {
+                sendToClient(clients[i], "Server Response: Received \"" + str + "\"");
+
+            }
         }
     }
+
+
 }
+
 
 
