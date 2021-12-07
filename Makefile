@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I/opt/Qt/6.2.1/gcc_64/include -I/opt/Qt/6.2.1/gcc_64/include/QtWidgets -I/opt/Qt/6.2.1/gcc_64/include/QtGui -I/opt/Qt/6.2.1/gcc_64/include/QtNetwork -I/opt/Qt/6.2.1/gcc_64/include/QtCore -I. -I. -I/opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++
+INCPATH       = -I. -I/opt/Qt/6.2.1/gcc_64/include -I/opt/Qt/6.2.1/gcc_64/include/QtWidgets -I/opt/Qt/6.2.1/gcc_64/include/QtGui -I/opt/Qt/6.2.1/gcc_64/include/QtNetwork -I/opt/Qt/6.2.1/gcc_64/include/QtSql -I/opt/Qt/6.2.1/gcc_64/include/QtCore -I. -I. -I/opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++
 QMAKE         = /opt/Qt/6.2.1/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = MyServer1.0.0
 DISTDIR = /home/konstantin/QtProjects/MyServer/.tmp/MyServer1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/opt/Qt/6.2.1/gcc_64/lib -Wl,-rpath-link,/opt/Qt/6.2.1/gcc_64/lib
-LIBS          = $(SUBLIBS) /opt/Qt/6.2.1/gcc_64/lib/libQt6Widgets.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Gui.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Network.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Core.so -lpthread -lGL   
+LIBS          = $(SUBLIBS) /opt/Qt/6.2.1/gcc_64/lib/libQt6Widgets.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Gui.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Network.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Sql.so /opt/Qt/6.2.1/gcc_64/lib/libQt6Core.so -lpthread -lGL   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -174,6 +174,7 @@ DIST          = /opt/Qt/6.2.1/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/qt_config.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/toolchain.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/default_pre.prf \
@@ -194,7 +195,8 @@ DIST          = /opt/Qt/6.2.1/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/exceptions.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/yacc.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/lex.prf \
-		MyServer.pro myserver.h main.cpp \
+		MyServer.pro ../MyClient/globalcommonheader.h \
+		myserver.h main.cpp \
 		myserver.cpp
 QMAKE_TARGET  = MyServer
 DESTDIR       = 
@@ -324,6 +326,7 @@ Makefile: MyServer.pro /opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++/qmake.conf /opt/Qt
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/qt_config.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/toolchain.prf \
 		/opt/Qt/6.2.1/gcc_64/mkspecs/features/default_pre.prf \
@@ -348,6 +351,7 @@ Makefile: MyServer.pro /opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++/qmake.conf /opt/Qt
 		/opt/Qt/6.2.1/gcc_64/lib/libQt6Widgets.prl \
 		/opt/Qt/6.2.1/gcc_64/lib/libQt6Gui.prl \
 		/opt/Qt/6.2.1/gcc_64/lib/libQt6Network.prl \
+		/opt/Qt/6.2.1/gcc_64/lib/libQt6Sql.prl \
 		/opt/Qt/6.2.1/gcc_64/lib/libQt6Core.prl
 	$(QMAKE) -o Makefile MyServer.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 /opt/Qt/6.2.1/gcc_64/mkspecs/features/spec_pre.prf:
@@ -467,6 +471,7 @@ Makefile: MyServer.pro /opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++/qmake.conf /opt/Qt
 /opt/Qt/6.2.1/gcc_64/mkspecs/features/qt_config.prf:
 /opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++/qmake.conf:
 /opt/Qt/6.2.1/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /opt/Qt/6.2.1/gcc_64/mkspecs/features/exclusive_builds.prf:
 /opt/Qt/6.2.1/gcc_64/mkspecs/features/toolchain.prf:
 /opt/Qt/6.2.1/gcc_64/mkspecs/features/default_pre.prf:
@@ -491,6 +496,7 @@ MyServer.pro:
 /opt/Qt/6.2.1/gcc_64/lib/libQt6Widgets.prl:
 /opt/Qt/6.2.1/gcc_64/lib/libQt6Gui.prl:
 /opt/Qt/6.2.1/gcc_64/lib/libQt6Network.prl:
+/opt/Qt/6.2.1/gcc_64/lib/libQt6Sql.prl:
 /opt/Qt/6.2.1/gcc_64/lib/libQt6Core.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile MyServer.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
@@ -507,7 +513,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/Qt/6.2.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents myserver.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../MyClient/globalcommonheader.h myserver.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp myserver.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents myserver.ui $(DISTDIR)/
 
@@ -1022,7 +1028,6 @@ moc_myserver.cpp: myserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwidgetaction.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwizard.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgetsversion.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QTextEdit \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpSocket \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpsocket.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
@@ -1031,9 +1036,29 @@ moc_myserver.cpp: myserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qhostaddress.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpServer \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/QVector \
+		/home/konstantin/QtProjects/MyClient/globalcommonheader.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSql \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSqlDepends \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlglobal.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsql-config.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldatabase.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldriver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldriverplugin.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlerror.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlfield.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlindex.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrecord.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlquery.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlquerymodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrelationaldelegate.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrelationaltablemodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqltablemodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlresult.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlversion.h \
 		moc_predefs.h \
 		/opt/Qt/6.2.1/gcc_64/libexec/moc
-	/opt/Qt/6.2.1/gcc_64/libexec/moc $(DEFINES) --include /home/konstantin/QtProjects/MyServer/moc_predefs.h -I/opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++ -I/home/konstantin/QtProjects/MyServer -I/opt/Qt/6.2.1/gcc_64/include -I/opt/Qt/6.2.1/gcc_64/include/QtWidgets -I/opt/Qt/6.2.1/gcc_64/include/QtGui -I/opt/Qt/6.2.1/gcc_64/include/QtNetwork -I/opt/Qt/6.2.1/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include myserver.h -o moc_myserver.cpp
+	/opt/Qt/6.2.1/gcc_64/libexec/moc $(DEFINES) --include /home/konstantin/QtProjects/MyServer/moc_predefs.h -I/opt/Qt/6.2.1/gcc_64/mkspecs/linux-g++ -I/home/konstantin/QtProjects/MyServer -I/opt/Qt/6.2.1/gcc_64/include -I/opt/Qt/6.2.1/gcc_64/include/QtWidgets -I/opt/Qt/6.2.1/gcc_64/include/QtGui -I/opt/Qt/6.2.1/gcc_64/include/QtNetwork -I/opt/Qt/6.2.1/gcc_64/include/QtSql -I/opt/Qt/6.2.1/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include myserver.h -o moc_myserver.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1056,10 +1081,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgetsDepends \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/QtCore \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/QtCoreDepends \
+main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtguiglobal.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qglobal.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qconfig.h \
@@ -1080,17 +1105,16 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qglobalstatic.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qnumeric.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qversiontagging.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstractanimation.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qobject.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qnamespace.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qtmetamacros.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtgui-config.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcoreapplication.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstring.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qchar.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstringview.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qbytearray.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qtmetamacros.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qarraydata.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qpair.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qarraydatapointer.h \
@@ -1104,6 +1128,11 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qutf8stringview.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstringtokenizer.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcoreevent.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qobject.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qlist.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qhashfunctions.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qiterator.h \
@@ -1111,7 +1140,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstringlist.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qalgorithms.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstringmatcher.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcoreevent.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qscopedpointer.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmetatype.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcompare.h \
@@ -1128,24 +1156,67 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qproperty.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qshareddata.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qpropertyprivate.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstracteventdispatcher.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qeventloop.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstractitemmodel.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qfuture.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qfutureinterface.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmutex.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qresultstore.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmap.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qshareddata_impl.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qhash.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qtextstream.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qstringconverter.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qset.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcontiguouscache.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qsharedpointer.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qfuture_impl.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qthreadpool.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qthread.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qelapsedtimer.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qrunnable.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qexception.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qpointer.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qapplicationpermission.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qnativeinterface.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qloggingcategory.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qwindowdefs.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qpoint.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmargins.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qcursor.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qbitmap.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpixmap.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpaintdevice.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qcolor.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qrgb.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qrgba64.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qimage.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpixelformat.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtransform.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpolygon.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qregion.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qline.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qinputmethod.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtGui/qguiapplication_platform.h \
+		myserver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgetsDepends \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/QtCore \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/QtCoreDepends \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstractanimation.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstractitemmodel.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qanimationgroup.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qapplicationpermission.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qassociativeiterable.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qbasictimer.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qbitarray.h \
@@ -1154,7 +1225,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qbytearraymatcher.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcache.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcalendar.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qlocale.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcborarray.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcborvalue.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qdatetime.h \
@@ -1170,22 +1240,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcollator.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcommandlineoption.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcommandlineparser.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcoreapplication.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qfuture.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qfutureinterface.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmutex.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qresultstore.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qfuture_impl.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qthreadpool.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qthread.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qdeadlinetimer.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qelapsedtimer.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qrunnable.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qexception.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qpointer.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qnativeinterface.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qloggingcategory.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcoreapplication_platform.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qconcatenatetablesproxymodel.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qcryptographichash.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qdir.h \
@@ -1214,10 +1268,7 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qlibrary.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qlibraryinfo.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qversionnumber.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qline.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qpoint.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qlockfile.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmargins.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmessageauthenticationcode.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmetaobject.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qmimedata.h \
@@ -1236,8 +1287,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qqueue.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qrandom.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qreadwritelock.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qrect.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtCore/qsize.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qresource.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qsavefile.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qscopedvaluerollback.h \
@@ -1273,22 +1322,8 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/qtcoreversion.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/QtGui \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/QtGuiDepends \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtguiglobal.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtgui-config.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qabstractfileiconprovider.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qicon.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpixmap.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpaintdevice.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qwindowdefs.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qwindowdefs_win.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qcolor.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qrgb.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qrgba64.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qimage.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpixelformat.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtransform.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qpolygon.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qregion.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtextlayout.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qevent.h \
@@ -1327,8 +1362,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/QMargins \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qsurface.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qsurfaceformat.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qcursor.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qbitmap.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qclipboard.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qcolorspace.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qcolortransform.h \
@@ -1340,9 +1373,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qgenericmatrix.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qgenericplugin.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qgenericpluginfactory.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qinputmethod.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtGui/qguiapplication_platform.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qiconengine.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qiconengineplugin.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qimageiohandler.h \
@@ -1395,8 +1425,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qundostack.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qvalidator.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/qtguiversion.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qabstractbutton.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwidget.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qsizepolicy.h \
@@ -1417,7 +1445,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/QAction \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qactiongroup.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtGui/QActionGroup \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qapplication.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qboxlayout.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qlayout.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qlayoutitem.h \
@@ -1533,8 +1560,6 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwidgetaction.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwizard.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgetsversion.h \
-		myserver.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QTextEdit \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpSocket \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpsocket.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
@@ -1542,7 +1567,27 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QtWidgets \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qabstractsocket.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qhostaddress.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpServer \
-		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h
+		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/QVector \
+		/home/konstantin/QtProjects/MyClient/globalcommonheader.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSql \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSqlDepends \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlglobal.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsql-config.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldatabase.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldriver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldriverplugin.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlerror.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlfield.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlindex.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrecord.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlquery.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlquerymodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrelationaldelegate.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrelationaltablemodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqltablemodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlresult.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 myserver.o: myserver.cpp myserver.h \
@@ -2023,7 +2068,6 @@ myserver.o: myserver.cpp myserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwidgetaction.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qwizard.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/qtwidgetsversion.h \
-		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QTextEdit \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpSocket \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpsocket.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
@@ -2032,7 +2076,33 @@ myserver.o: myserver.cpp myserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qhostaddress.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpServer \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h \
-		ui_myserver.h
+		/opt/Qt/6.2.1/gcc_64/include/QtCore/QVector \
+		/home/konstantin/QtProjects/MyClient/globalcommonheader.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSql \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSqlDepends \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlglobal.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsql-config.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldatabase.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldriver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqldriverplugin.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlerror.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlfield.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlindex.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrecord.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlquery.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlquerymodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrelationaldelegate.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlrelationaltablemodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqltablemodel.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qsqlresult.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlversion.h \
+		ui_myserver.h \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QMainWindow \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QMenuBar \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QStatusBar \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QToolBar \
+		/opt/Qt/6.2.1/gcc_64/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myserver.o myserver.cpp
 
 moc_myserver.o: moc_myserver.cpp 
