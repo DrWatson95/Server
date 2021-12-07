@@ -22,9 +22,9 @@ QT_BEGIN_NAMESPACE
 class Ui_MyServer
 {
 public:
+    QWidget *centralWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
-    QWidget *centralWidget;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MyServer)
@@ -32,15 +32,16 @@ public:
         if (MyServer->objectName().isEmpty())
             MyServer->setObjectName(QString::fromUtf8("MyServer"));
         MyServer->resize(400, 300);
-        menuBar = new QMenuBar(MyServer);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        MyServer->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MyServer);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        MyServer->addToolBar(mainToolBar);
         centralWidget = new QWidget(MyServer);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         MyServer->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(MyServer);
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 400, 22));
+        MyServer->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(MyServer);
+        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        MyServer->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MyServer);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MyServer->setStatusBar(statusBar);

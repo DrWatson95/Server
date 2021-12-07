@@ -51,6 +51,16 @@ void MyServer::sendToClient(QTcpSocket *pSocket)
     pSocket->write(arrBlock);
 }
 
+void MyServer::sendToAllClients(QString text)
+{
+    QByteArray arrBlock;
+    QDataStream out(&arrBlock, QIODevice::WriteOnly);
+    out << quint8(MessageID::UsefulExchange) << text;
+    for (size_t i = 0;i < clients.size(); ++i) {
+        clients[i]->write(arrBlock);
+    }
+}
+
 MyServer::MyServer(int nPort, QWidget* pwgt) : QWidget (pwgt) , m_nNextBlockSize(0)
 {
     user_counter = 0;
@@ -126,12 +136,15 @@ void MyServer::slotReadClient()
         break;
     }
     case static_cast<quint8>(MessageID::UsefulExchange):{
-
-        qDebug() << "UsefulExchange";
+        QString text;
+        in >> text;
+        sendToAllClients(text);
+        m_ptxt->append(text);
+        qDebug() << "UsefulExchange:" << text;
         break;
+    }
     default:
             break;
-    }
     }
 
 }

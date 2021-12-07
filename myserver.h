@@ -24,6 +24,7 @@ private:
     void registerUser(QString,QString,QTcpSocket*);
     void sendIsSuccessAuth(QTcpSocket *pSocket, bool isSuccess);
     void sendIsSuccessReg(QTcpSocket *pSocket, bool isSuccess);
+    void sendToAllClients(QString);
 public:
     bool connectDB();
     MyServer(int nPort, QWidget* pwgt = 0);
