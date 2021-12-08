@@ -81,9 +81,9 @@ MyServer::MyServer(int nPort, QWidget* pwgt) : QWidget (pwgt) , m_nNextBlockSize
     }
     QSqlQuery query;
 
-    db_input = "CREATE TABLE userlist ( "
-               "number INTEGER PRIMARY KEY NOT NULL,"
-               "name VARCHAR(20), "
+    db_input = "CREATE TABLE IF NOT EXISTS userlist ( "
+               "number INTEGER,"
+               "name VARCHAR(20) PRIMARY KEY NOT NULL, "
                "pass VARCHAR(12));";
     if(!query.exec(db_input))
     {
@@ -149,43 +149,6 @@ void MyServer::slotReadClient()
 
 }
 
-//void MyServer::slotReadClient()
-//{
-//    QByteArray data;
-//    QTcpSocket* pClientSocket = (QTcpSocket*)sender();
-//    data = pClientSocket->readAll();
-//    QDataStream in(pClientSocket);
-//    switch (data.at(0)) {
-//    case static_cast<quint8>(MessageID::Authorization):{
-//        QTextStream in (&data, QIODevice::ReadOnly );
-//        in.device()->seek(1);
-//        QString m_username, m_userpass;
-//        in >> m_username >> m_userpass;
-//        authorizeUser(m_username,m_userpass,pClientSocket);
-//        qDebug() << "0";
-//        break;
-//    }
-//    case static_cast<quint8>(MessageID::Registration):{
-//        QTextStream in (&data, QIODevice::ReadOnly );
-//        in.device()->seek(1);
-//        QString m_username, m_userpass;
-//        in >> m_username >> m_userpass;
-//        qDebug("Hereeeeeeeeeeee");
-//        qDebug() << m_username;
-//        qDebug() << m_userpass;
-//        registerUser(m_username,m_userpass,pClientSocket);
-//        qDebug() << "1";
-//        break;
-//    }
-//    case static_cast<quint8>(MessageID::UsefulExchange):{
-//        qDebug() << "2";
-//        break;
-//    default:
-//            break;
-//    }
-//    }
-
-//}
 
 void MyServer::authorizeUser(QString m_username, QString m_userpass, QTcpSocket* pClientSocket)
 {
@@ -221,40 +184,26 @@ void MyServer::authorizeUser(QString m_username, QString m_userpass, QTcpSocket*
 
 void MyServer::registerUser(QString m_username, QString m_userpass,QTcpSocket* pClientSocket)
 {
-    QSqlQuery query;
-    QSqlRecord rec;
-    QString str_t       = "SELECT COUNT(*) "
-                          "FROM userlist;";
-    db_input            = str_t;
-    if(!query.exec(db_input))
-    {
-        qDebug() << "Unable to get number " << query.lastError() << " : " << query.lastQuery();
+    QSqlQuery* query = new QSqlQuery(mw_db);
+    QString str_t= "SELECT COUNT(*) FROM userlist;";
+    QString db_input = str_t;
+    if(!query->exec(db_input)){
+        qDebug() << "Unable to get number " << query->lastError() << " : " << query->lastQuery();
         return;
     }
-    else
-    {
-        query.next();
-        rec = query.record();
-        user_counter = rec.value(0).toInt();
+    else{
+        query->next();
+        user_counter = query->value(0).toInt();
         qDebug() << user_counter;
     }
-    qDebug() << user_counter;
     user_counter++;
-    str_t               =   "INSERT INTO userlist(number, name, pass)"
-                            "VALUES(%1, '%2', '%3');";
-    //qDebug() << m_username;
-    //qDebug() << m_userpass;
-    db_input            = str_t .arg(user_counter)
-                                .arg(m_username)
-                                .arg(m_userpass);
-
-
-    if(!query.exec(db_input))
-    {
-        qDebug() << "Unable to insert data"  << query.lastError() << " : " << query.lastQuery();
-    }
-    else
-    {
+    str_t = "INSERT INTO userlist(number, name, pass) VALUES(%1, '%2', '%3');";
+    db_input = str_t .arg(user_counter).arg(m_username).arg(m_userpass);
+    if(!query->exec(db_input)){
+        sendIsSuccessReg(pClientSocket,false);
+        qDebug() << "FAILURE";
+    }else{
+        qDebug() << "SUCCESS";
         sendIsSuccessReg(pClientSocket,true);
     }
 }
