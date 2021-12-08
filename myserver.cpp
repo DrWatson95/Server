@@ -51,11 +51,14 @@ void MyServer::sendToClient(QTcpSocket *pSocket)
     pSocket->write(arrBlock);
 }
 
-void MyServer::sendToAllClients(QString text)
+void MyServer::sendToAllClients(QString text,QTcpSocket* pClientSocket)
 {
     QByteArray arrBlock;
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out << quint8(MessageID::UsefulExchange) << text;
+    QString IpAddress = pClientSocket->peerAddress().toString();
+    IpAddress.erase(IpAddress.begin(),IpAddress.begin()+7);
+
+    out << quint8(MessageID::UsefulExchange) << IpAddress << text;
     for (size_t i = 0;i < clients.size(); ++i) {
         clients[i]->write(arrBlock);
     }
@@ -138,7 +141,7 @@ void MyServer::slotReadClient()
     case static_cast<quint8>(MessageID::UsefulExchange):{
         QString text;
         in >> text;
-        sendToAllClients(text);
+        sendToAllClients(text,pClientSocket);
         m_ptxt->append(text);
         qDebug() << "UsefulExchange:" << text;
         break;
