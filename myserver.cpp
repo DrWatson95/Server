@@ -105,7 +105,7 @@ MyServer::MyServer(int nPort, QWidget* pwgt) : QWidget (pwgt) , m_nNextBlockSize
 *
 *   \details Вызывается по сигналу MyServer::newConnection.
 *   Метод связывает клиента с сервером и отправляет положительный ответ об установке соединения.
-*s
+*dfdfsdf
 *   \return void
 *
 **/
