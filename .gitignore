@@ -1,6 +1,6 @@
 latex/*
 html/*
-
+myserver.o
 # C++ objects and libs
 *.slo
 *.lo
