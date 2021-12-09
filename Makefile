@@ -1037,7 +1037,7 @@ moc_myserver.cpp: myserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpServer \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/QVector \
-		/home/konstantin/QtProjects/MyClient/globalcommonheader.h \
+		../MyClient/globalcommonheader.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSql \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSqlDepends \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlglobal.h \
@@ -1569,7 +1569,7 @@ main.o: main.cpp /opt/Qt/6.2.1/gcc_64/include/QtWidgets/QApplication \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpServer \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/QVector \
-		/home/konstantin/QtProjects/MyClient/globalcommonheader.h \
+		../MyClient/globalcommonheader.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSql \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSqlDepends \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlglobal.h \
@@ -2077,7 +2077,7 @@ myserver.o: myserver.cpp myserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/QTcpServer \
 		/opt/Qt/6.2.1/gcc_64/include/QtNetwork/qtcpserver.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtCore/QVector \
-		/home/konstantin/QtProjects/MyClient/globalcommonheader.h \
+		../MyClient/globalcommonheader.h \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSql \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/QtSqlDepends \
 		/opt/Qt/6.2.1/gcc_64/include/QtSql/qtsqlglobal.h \

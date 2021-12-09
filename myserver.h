@@ -3,7 +3,7 @@
 #include <QTcpSocket>
 #include <QTcpServer>
 #include <QVector>
-#include "/home/konstantin/QtProjects/MyClient/globalcommonheader.h"
+#include "../MyClient/globalcommonheader.h"
 #include <QtSql/QtSql>
 
 
@@ -19,9 +19,10 @@ private:
     bool m_loginSuccesfull;
     QSqlDatabase mw_db;
 private:
-    void sendToClient(QTcpSocket* pSocket);
     void authorizeUser(QString,QString,QTcpSocket*);
     void registerUser(QString,QString,QTcpSocket*);
+
+    void sendToClient(QTcpSocket* pSocket);
     void sendIsSuccessAuth(QTcpSocket *pSocket, bool isSuccess);
     void sendIsSuccessReg(QTcpSocket *pSocket, bool isSuccess);
     void sendToAllClients(QString,QTcpSocket*);

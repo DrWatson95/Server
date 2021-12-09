@@ -100,6 +100,16 @@ MyServer::MyServer(int nPort, QWidget* pwgt) : QWidget (pwgt) , m_nNextBlockSize
     setLayout(pvbxLayout);
 }
 
+/**
+*   \brief Реакция на новое соединение
+*
+*   \details Вызывается по сигналу MyServer::newConnection.
+*   Метод связывает клиента с сервером и отправляет положительный ответ об установке соединения.
+*
+*   \return void
+*
+**/
+
 void MyServer::slotNewConnection()
 {
     QTcpSocket* pClientSocket = m_ptcpServer->nextPendingConnection();
