@@ -55,10 +55,10 @@ void MyServer::sendToAllClients(QString text,QTcpSocket* pClientSocket)
 {
     QByteArray arrBlock;
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    QString IpAddress = pClientSocket->peerAddress().toString();
-    IpAddress.erase(IpAddress.begin(),IpAddress.begin()+7);
+    //QString IpAddress = pClientSocket->peerAddress().toString();
+    //IpAddress.erase(IpAddress.begin(),IpAddress.begin()+7);
 
-    out << quint8(MessageID::UsefulExchange) << IpAddress << text;
+    out << quint8(MessageID::UsefulExchange) << text;
     for (size_t i = 0;i < clients.size(); ++i) {
         clients[i]->write(arrBlock);
     }
@@ -139,11 +139,11 @@ void MyServer::slotReadClient()
         break;
     }
     case static_cast<quint8>(MessageID::UsefulExchange):{
-        QString text;
-        in >> text;
-        sendToAllClients(text,pClientSocket);
-        m_ptxt->append(text);
-        qDebug() << "UsefulExchange:" << text;
+        QString allMessage;
+        in >> allMessage;
+        sendToAllClients(allMessage,pClientSocket);
+        m_ptxt->append(allMessage);
+        qDebug() << "UsefulExchange:" << allMessage;
         break;
     }
     default:
